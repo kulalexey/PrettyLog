@@ -1,0 +1,8 @@
+bin/
+obj/
+pkg/
+pkgobj/
+_ReSharper.*
+*.suo
+*.user
+*.csproj.ReSharper

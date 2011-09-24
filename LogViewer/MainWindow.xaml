@@ -1,0 +1,57 @@
+﻿<Window x:Class="LogViewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:LogViewer="clr-namespace:LogViewer"
+        xmlns:extToolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"
+        Title="Log viewer" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="350" Width="525">
+	<Window.Resources>
+		<!-- Define some image resources, for use as the image element source. -->
+		<BitmapImage x:Key="BackForwardImage" UriSource="Icons/Back_Forward.png" />
+		<BitmapImage x:Key="FilterImageCollection" UriSource="Icons/Filter.png" />
+		<CroppedBitmap x:Key="BackImage" Source="{StaticResource BackForwardImage}" SourceRect="5 10 20 20"/>
+		<CroppedBitmap x:Key="ForwardImage" Source="{StaticResource BackForwardImage}" SourceRect="25 10 20 20"/>
+		<CroppedBitmap x:Key="FilterImage" Source="{StaticResource FilterImageCollection}" SourceRect="3 0 24 24"/>
+	</Window.Resources>
+	<Grid>
+		
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition />
+		</Grid.RowDefinitions>
+
+		<ToolBarTray Height="30" Grid.Row="0">
+			<ToolBar Height="30">
+				<ComboBox Name="loginstanceComboBox" Width="120" ItemsSource="{Binding LogInstances}" SelectedValue="{Binding LogCurrentInstance, Mode=OneTime}" SelectionChanged="loginstanceComboBox_SelectionChanged"/>
+			</ToolBar>
+			<ToolBar Height="30" >
+				<Button Click="PreviousPageClick" Width="30" Height="30" >
+					<Image Source="{DynamicResource ResourceKey=BackImage}"/>
+				</Button>
+				<Button Click="NextPageClick" Width="30" Height="30">
+					<Image Source="{DynamicResource ResourceKey=ForwardImage}"/>
+				</Button>
+			</ToolBar>
+			<ToolBar Height="30" >
+				<TextBox Width="200" Name="queryTextBox" KeyDown="queryTextBox_KeyDown"/>
+				<Button Click="FilterClick" Width="30" Height="30">
+					<Image Source="{DynamicResource ResourceKey=FilterImage}"/>
+				</Button>
+			</ToolBar>
+		</ToolBarTray>
+
+		<DataGrid ItemsSource="{Binding LogEntries}" AutoGenerateColumns="false" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="False" Grid.Row="1">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="N" Binding="{Binding Path=N}" IsReadOnly="True"/>
+				<DataGridTextColumn Header="time" Binding="{Binding Path=Time}" IsReadOnly="True"/>
+				<DataGridTextColumn Header="category" Binding="{Binding Path=Category}" IsReadOnly="True"/>
+				<DataGridTemplateColumn Header="message" Width="*" IsReadOnly="True">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<LogViewer:LogEntryControl Document="{Binding Message}"></LogViewer:LogEntryControl>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+	</Grid>
+</Window>
